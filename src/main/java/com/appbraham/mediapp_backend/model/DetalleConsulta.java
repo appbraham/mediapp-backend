@@ -1,5 +1,6 @@
 package com.appbraham.mediapp_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -10,6 +11,8 @@ public class DetalleConsulta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDetalle;
 
+    //@Transient => Hace que el atributo no representa nada en base de datos solo en una entidad de Java
+    @JsonIgnore //Evita que se considere o que sea obligatorio el atributo en el JSON
     @ManyToOne
     @JoinColumn(name = "id_consulta", nullable = false, foreignKey = @ForeignKey(name = "fk_consulta_detalle"))
     private Consulta consulta;
