@@ -26,16 +26,16 @@ public class EspecialidadController {
     private IEspecialidadService service;
 
     @GetMapping
-    public ResponseEntity<List<Especialidad>> listar() {
+    public ResponseEntity<List<Especialidad>> listar() throws Exception {
         List<Especialidad> lista = service.listar();
         return new ResponseEntity<List<Especialidad>>( lista, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Especialidad> listarPorId(@PathVariable("id") Integer id){
+    public ResponseEntity<Especialidad> listarPorId(@PathVariable("id") Integer id) throws Exception {
         Especialidad especialidad = service.listarPorId(id);
 
-        if(especialidad.getIdEspecialidad() == null){
+        if(especialidad == null){
             throw new ModeloNotFoundException("ID NO ENCONTRADO: " + id);
         }
 
@@ -44,7 +44,7 @@ public class EspecialidadController {
 
     //Usando HATEOAS
     @GetMapping("/hateoas/{id}")
-    public EntityModel<Especialidad> ListarPorIdHateoas(@PathVariable("id") Integer id){
+    public EntityModel<Especialidad> ListarPorIdHateoas(@PathVariable("id") Integer id) throws Exception {
 
         Especialidad especialidad = service.listarPorId(id);
         //localhost:8080/especialidad/{id}
@@ -65,7 +65,7 @@ public class EspecialidadController {
 
     //API Nivel 3 - Richardson
     @PostMapping
-    public ResponseEntity<Object> registrar(@Valid @RequestBody Especialidad especialidad){
+    public ResponseEntity<Object> registrar(@Valid @RequestBody Especialidad especialidad) throws Exception {
         Especialidad nuevaEspecialidad = service.registrar(especialidad);
         //localhost:8080/especialidad/5
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(nuevaEspecialidad.getIdEspecialidad()).toUri();
@@ -73,15 +73,15 @@ public class EspecialidadController {
     }
 
     @PutMapping
-    public ResponseEntity<Especialidad> modificar(@Valid @RequestBody Especialidad especialidad){
+    public ResponseEntity<Especialidad> modificar(@Valid @RequestBody Especialidad especialidad) throws Exception {
         Especialidad nuevaEspecialidad = service.modificar(especialidad);
         return new ResponseEntity<Especialidad>(nuevaEspecialidad, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> eliminar(@PathVariable("id") Integer id){
+    public ResponseEntity<Object> eliminar(@PathVariable("id") Integer id) throws Exception {
         Especialidad m = service.listarPorId(id);
-        if (m.getIdEspecialidad() == null){
+        if (m == null){
             throw new ModeloNotFoundException("La Especialidad no existe, ID: " +id);
         }
         service.eliminar(id);

@@ -4,6 +4,6 @@ import com.appbraham.mediapp_backend.model.Especialidad;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 //@Repository, En este caso es opcional
-public interface IEspecialidadRepo extends JpaRepository<Especialidad, Integer> {
+public interface IEspecialidadRepo extends IGenericRepository<Especialidad, Integer> {
 
 }

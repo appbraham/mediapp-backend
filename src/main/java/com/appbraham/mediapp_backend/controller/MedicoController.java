@@ -26,16 +26,16 @@ public class MedicoController {
     private IMedicoService service;
 
     @GetMapping
-    public ResponseEntity<List<Medico>> listar() {
+    public ResponseEntity<List<Medico>> listar() throws Exception {
         List<Medico> lista = service.listar();
         return new ResponseEntity<List<Medico>>( lista, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Medico> listarPorId(@PathVariable("id") Integer id){
+    public ResponseEntity<Medico> listarPorId(@PathVariable("id") Integer id) throws Exception {
         Medico medico = service.listarPorId(id);
 
-        if(medico.getIdMedico() == null){
+        if(medico == null){
             throw new ModeloNotFoundException("ID NO ENCONTRADO: " + id);
         }
 
@@ -44,7 +44,7 @@ public class MedicoController {
 
     //Usando HATEOAS
     @GetMapping("/hateoas/{id}")
-    public EntityModel<Medico> ListarPorIdHateoas(@PathVariable("id") Integer id){
+    public EntityModel<Medico> ListarPorIdHateoas(@PathVariable("id") Integer id) throws Exception {
 
         Medico medico = service.listarPorId(id);
         //localhost:8080/medico/{id}
@@ -65,7 +65,7 @@ public class MedicoController {
 
     //API Nivel 3 - Richardson
     @PostMapping
-    public ResponseEntity<Object> registrar(@Valid @RequestBody Medico medico){
+    public ResponseEntity<Object> registrar(@Valid @RequestBody Medico medico) throws Exception {
         Medico nuevoMedico = service.registrar(medico);
         //localhost:8080/medico/5
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(nuevoMedico.getIdMedico()).toUri();
@@ -73,15 +73,15 @@ public class MedicoController {
     }
 
     @PutMapping
-    public ResponseEntity<Medico> modificar(@Valid @RequestBody Medico medico){
+    public ResponseEntity<Medico> modificar(@Valid @RequestBody Medico medico) throws Exception {
         Medico nuevoMedico = service.modificar(medico);
         return new ResponseEntity<Medico>(nuevoMedico, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> eliminar(@PathVariable("id") Integer id){
+    public ResponseEntity<Object> eliminar(@PathVariable("id") Integer id) throws Exception {
         Medico m = service.listarPorId(id);
-        if (m.getIdMedico() == null){
+        if (m == null){
             throw new ModeloNotFoundException("El Medico no existe, ID: " +id);
         }
         service.eliminar(id);

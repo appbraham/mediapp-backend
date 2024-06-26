@@ -27,16 +27,16 @@ public class ConsultaController {
     private IConsultaService service;
 
     @GetMapping
-    public ResponseEntity<List<Consulta>> listar() {
+    public ResponseEntity<List<Consulta>> listar() throws Exception {
         List<Consulta> lista = service.listar();
         return new ResponseEntity<List<Consulta>>( lista, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Consulta> listarPorId(@PathVariable("id") Integer id){
+    public ResponseEntity<Consulta> listarPorId(@PathVariable("id") Integer id) throws Exception{
         Consulta consulta = service.listarPorId(id);
 
-        if(consulta.getIdConsulta() == null){
+        if(consulta == null){
             throw new ModeloNotFoundException("ID NO ENCONTRADO: " + id);
         }
 
@@ -45,7 +45,7 @@ public class ConsultaController {
 
     //Usando HATEOAS
     @GetMapping("/hateoas/{id}")
-    public EntityModel<Consulta> ListarPorIdHateoas(@PathVariable("id") Integer id){
+    public EntityModel<Consulta> ListarPorIdHateoas(@PathVariable("id") Integer id) throws Exception {
 
         Consulta consulta = service.listarPorId(id);
         //localhost:8080/consulta/{id}
@@ -74,15 +74,15 @@ public class ConsultaController {
     }
 
     @PutMapping
-    public ResponseEntity<Consulta> modificar(@Valid @RequestBody Consulta consulta){
+    public ResponseEntity<Consulta> modificar(@Valid @RequestBody Consulta consulta) throws Exception {
         Consulta nuevoConsulta = service.modificar(consulta);
         return new ResponseEntity<Consulta>(nuevoConsulta, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> eliminar(@PathVariable("id") Integer id){
+    public ResponseEntity<Object> eliminar(@PathVariable("id") Integer id) throws Exception {
         Consulta m = service.listarPorId(id);
-        if (m.getIdConsulta() == null){
+        if (m == null){
             throw new ModeloNotFoundException("El Consulta no existe, ID: " +id);
         }
         service.eliminar(id);
